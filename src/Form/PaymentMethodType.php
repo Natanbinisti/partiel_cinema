@@ -16,7 +16,6 @@ class PaymentMethodType extends AbstractType
     {
         $builder
             ->add('cardNumber')
-            ->add('submit', SubmitType::class)
         ;
     }
 

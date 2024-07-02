@@ -11,6 +11,9 @@
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{{ path('app_film_create') }}">Create film</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Horaire</a>
+                        </li>
                         <a href="{{ path('app_profile') }}" class="nav-link">{{ app.user.username }}</a>
                         <a class="nav-link ms-3" href="{{ path('app_logout') }}">Logout</a>
                     {% elseif is_granted('ROLE_USER')  %}

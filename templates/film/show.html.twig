@@ -1,18 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello FruitController!{% endblock %}
+{% block title %}{% endblock %}
 
 {% block body %}
 
+    <div class="container align-items-center">
 
-
-    <div class="border border-dark">
+    <div class="">
         <h3>{{ film.name }}</h3>
-        <p><strong>Price : {{ film.resume }}</strong></p>
+        <p><strong>Resume : {{ film.resume }}</strong></p>
         <a class="btn btn-secondary" href="{{ path('app_film') }}">retour</a>
-        <a class="btn btn-danger" href="{{ path('app_film_delete', {id:film.id} ) }}">supprimer</a>
-        <a class="btn btn-warning" href="{{ path('app_film_edit', {id:film.id} ) }}">edit</a>
+        {% if is_granted('ROLE_ADMIN')  %}
+            <a class="btn btn-danger" href="{{ path('app_film_delete', {id:film.id} ) }}">supprimer</a>
+            <a class="btn btn-warning" href="{{ path('app_film_edit', {id:film.id} ) }}">edit</a>
+        {% endif %}
     </div>
+    {% if is_granted('ROLE_ADMIN')  %}
+        <div class="form-control">
+        <h2>Add Image</h2>
+        {{ form_start(form,{attr: {action:path("app_film_show",{id:film.id})}}) }}
+        {{ form_row(form.imageFile) }}
+        <button type="submit" class="btn btn-primary">add</button>
+        {{ form_end(form) }}
+    </div>
+    {% endif %}
+    {% if film.image %}
+        {% for image in film.image %}
+            <div class="card">
+                <div class="d-flex justify-content-end">
+                    <a class="btn btn-danger" href="{{ path("app_film_image_delete",{id:image.id}) }}">delete</a>
+                </div>
+                <img class="mx-1" src="{{ vich_uploader_asset(image) }}" width="60px">
+            </div>
+        {% endfor %}
+    {% else %}
+        <img src="{{ asset("images/default_image.jpg")}}" alt="image_default">
+    {% endif %}
+    </div>
+
 
 
 

@@ -22,6 +22,8 @@ class Film
     #[ORM\Column(type: Types::TEXT)]
     private ?string $resume = null;
 
+    #[ORM\ManyToOne(inversedBy: 'films')]
+    private ?Image $image = null;
 
     public function getId(): ?int
     {
@@ -48,6 +50,18 @@ class Film
     public function setResume(string $resume): static
     {
         $this->resume = $resume;
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): static
+    {
+        $this->image = $image;
 
         return $this;
     }

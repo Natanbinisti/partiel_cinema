@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Film;
+use App\Entity\Image;
 use App\Form\FilmType;
+use App\Form\ImageType;
 use App\Repository\FilmRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -22,12 +24,23 @@ class FilmController extends AbstractController
         ]);
     }
     #[Route('/film/{id}', name: 'app_film_show',priority: -1)]
-    public function show(Film $film): Response
+    public function show(Film $film, Request $request, EntityManagerInterface $manager): Response
     {
+        $image = new Image();
+        $form = $this->createForm(ImageType::class, $image);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $image->setFilm($film);
+            $manager->persist($image);
+            $manager->flush();
+            return $this->redirectToRoute('app_film_show', ['id' => $film->getId()]);
+        }
         return $this->render('film/show.html.twig', [
-            'film' => $film,
+            "film" => $film,
+            'form' => $form->createView(),
         ]);
     }
+
     #[Route('/admin/film/create', name: 'app_film_create')]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
@@ -64,6 +77,15 @@ class FilmController extends AbstractController
     {
         $manager->remove($film);
         $manager->flush();
+        return $this->redirectToRoute('app_film');
+    }
+
+    #[Route('/image/delete/{id}', name: 'app_film_image_delete')]
+    public function deleteImageFilm(Image $image, EntityManagerInterface $manager) : Response
+    {
+        $manager->remove($image);
+        $manager->flush();
+
         return $this->redirectToRoute('app_film');
     }
 

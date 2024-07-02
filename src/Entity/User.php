@@ -42,9 +42,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: PaymentMethod::class, mappedBy: 'owner')]
     private Collection $paymentMethods;
 
+    #[ORM\OneToOne(mappedBy: 'customer', cascade: ['persist', 'remove'])]
+    private ?Order $orderTicket = null;
+
+    /**
+     * @var Collection<int, AdresseEmail>
+     */
+    #[ORM\ManyToMany(targetEntity: AdresseEmail::class, mappedBy: 'owner')]
+    private Collection $adresseEmails;
+
     public function __construct()
     {
         $this->paymentMethods = new ArrayCollection();
+        $this->adresseEmails = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -147,6 +157,50 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             if ($paymentMethod->getOwner() === $this) {
                 $paymentMethod->setOwner(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function getOrderTicket(): ?Order
+    {
+        return $this->orderTicket;
+    }
+
+    public function setOrderTicket(Order $orderTicket): static
+    {
+        // set the owning side of the relation if necessary
+        if ($orderTicket->getCustomer() !== $this) {
+            $orderTicket->setCustomer($this);
+        }
+
+        $this->orderTicket = $orderTicket;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, AdresseEmail>
+     */
+    public function getAdresseEmails(): Collection
+    {
+        return $this->adresseEmails;
+    }
+
+    public function addAdresseEmail(AdresseEmail $adresseEmail): static
+    {
+        if (!$this->adresseEmails->contains($adresseEmail)) {
+            $this->adresseEmails->add($adresseEmail);
+            $adresseEmail->addOwner($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAdresseEmail(AdresseEmail $adresseEmail): static
+    {
+        if ($this->adresseEmails->removeElement($adresseEmail)) {
+            $adresseEmail->removeOwner($this);
         }
 
         return $this;

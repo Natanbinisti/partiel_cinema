@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\AdresseEmail;
 use App\Entity\PaymentMethod;
+use App\Form\AdresseEmailType;
 use App\Form\PaymentMethodType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,4 +73,79 @@ class ProfileController extends AbstractController
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    #[Route('/profile/create/adresse_email', name: 'app_create_adresse_email', priority: 2)]
+    public function createAdresseEmail(Request $request, EntityManagerInterface $manager): Response
+    {
+        $adresseemail = new AdresseEmail();
+        $form = $this->createForm(AdresseEmailType::class, $adresseemail);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()){
+            $adresseemail->setOwner($this->getUser());
+            $manager->persist($adresseemail);
+            $manager->flush();
+            return $this->redirectToRoute("app_profile");
+        }
+
+        return $this->render('profile/adresse-create.html.twig', [
+            "form"=>$form->createView(),
+            "btnValue"=>"Ajouter"
+
+        ]);
+    }
+
+
+    #[Route('/profile/delete/adresse_email/{id}', name: 'app_delete_adresse_email', priority: 2)]
+    public function deleteAdresseEmail(EntityManagerInterface $manager, AdresseEmail $adresseemail): Response
+    {
+        $manager->remove($adresseemail);
+        $manager->flush();
+        return $this->redirectToRoute("app_profile");
+    }
+
+    #[Route('/profile/edit/adresse_email/{id}', name: 'app_edit_adresse_email', priority: 4)]
+    public function editAdresseEmail(Request $request, EntityManagerInterface $manager, AdresseEmail $adresseemail):Response
+    {
+        $form = $this->createForm(AdresseEmailType::class, $adresseemail);
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $adresseemail->setOwner($this->getUser());
+            $manager->persist($adresseemail);
+            $manager->flush();
+            return $this->redirectToRoute("app_profile");
+        }
+
+        return $this->render('profile/adresse-create.html.twig', [
+            "form"=>$form->createView(),
+            "btnValue"=>"Editer"
+        ]);
+
+    }
 }

@@ -5,8 +5,8 @@
 {% block body %}
 
     {{ form_start(form) }}
-    {{ form_row(form.name,{attr:{'value':film.name}}) }}
-    <button type="submit" class="btn btn-warning">edit</button>
+    {{ form_row(form.horaire) }}
+    <button type="submit" class="btn btn-success">create</button>
     {{ form_end(form) }}
 
 {% endblock %}

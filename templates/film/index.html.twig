@@ -5,12 +5,25 @@
 {% block body %}
 
     {% for film in films %}
-
-        <div class="border border-dark">
-            <h3>{{ film.name }}</h3>
-            <p><strong>Resume : {{ film.resume }} </strong></p>
-            <a class="btn btn-primary" href="{{ path("app_film_show", {id:film.id}) }}">Voir la page du film</a>
-        </div>
+<div class="container align-items-center mt-9">
+    <div class="">
+        <h3>{{ film.name }}</h3>
+        <p><strong>Resume : {{ film.resume }} </strong></p>
+        <a class="btn btn-primary" href="{{ path("app_film_show", {id:film.id}) }}">Voir la page du film</a>
+    </div>
+    {% if film.image %}
+        {% for image in film.image %}
+            <div class="card align-items-center">
+                <div class="d-flex justify-content-center">
+                    <a class="btn btn-danger" href="{{ path("app_film_image_delete",{id:image.id}) }}">delete</a>
+                </div>
+                <img class="mx-1" src="{{ vich_uploader_asset(image) }}" width="60px">
+            </div>
+        {% endfor %}
+    {% else %}
+        <img src="{{ asset("images/default_image.jpg")}}" alt="image_default">
+    {% endif %}
+</div>
 
     {% endfor %}
 
