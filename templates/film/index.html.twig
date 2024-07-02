@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello FilmController!{% endblock %}
+
+{% block body %}
+
+    {% for film in films %}
+
+        <div class="border border-dark">
+            <h3>{{ film.name }}</h3>
+            <p><strong>Resume : {{ film.resume }} </strong></p>
+            <a class="btn btn-primary" href="{{ path("app_film_show", {id:film.id}) }}">Voir la page du film</a>
+        </div>
+
+    {% endfor %}
+
+
+{% endblock %}

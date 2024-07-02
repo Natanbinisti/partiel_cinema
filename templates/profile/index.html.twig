@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ProfileController!{% endblock %}
+
+{% block body %}
+    {% if app.user %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="card mb-4 col-8 mx-auto">
+            <div class="card-header">
+                <h5 class="card-title">Vos moyens de paiement :</h5>
+            </div>
+            <div class="card-body">
+
+                <table class="table table-striped">
+                    <tbody>
+                    {% for paymentMethod in app.user.paymentMethods %}
+                        <tr>
+                            <td>{{ paymentMethod.cardNumber }}</td>
+                            <td class="col-4">
+                                <a href="{{ path("app_edit_paymentmethod", {id:paymentMethod.id}) }}" class="btn btn-warning me-4"><i class="bi bi-pencil"></i></a>
+                                <a href="{{ path("app_delete_paymentmethod", {id:paymentMethod.id}) }}" class="btn btn-danger"><i class="bi bi-trash"></i></a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <a href="{{ path("app_create_paymentmethod") }}" class="btn btn-primary text-center">Ajouter <i class="bi bi-credit-card"></i></a>
+            </div>
+        </div>
+
+    </div>
+</div>
+</div>
+{% endif %}
+{% endblock %}
